@@ -2,14 +2,16 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Lịch sử đơn hàng</title>
 </head>
 <body>
+
 <h1>Lịch sử đơn hàng</h1>
 
 <form action="/orders" method="get">
     <input type="hidden" name="sortBy" value="createdDate">
     <input type="hidden" name="direction" value="desc">
+
     <select name="status">
         <option value="ALL">Tất cả</option>
         <option value="Đang giao">Đang giao</option>
@@ -21,19 +23,19 @@
 </form>
 
 <div class="sort">
-    <a th:href="@{/orders(status=${param.status},sortBy='createdDate',direction='desc')}">Ngày mới nhất</a>
+    <a href="/orders?sortBy=createdDate&direction=desc">Ngày mới nhất</a>
     <a href="/orders?sortBy=createdDate&direction=asc">Ngày cũ nhất</a>
-
     <a href="/orders?sortBy=totalPrice&direction=desc">Giá cao nhất</a>
     <a href="/orders?sortBy=totalPrice&direction=asc">Giá thấp nhất</a>
 </div>
 
-<div class="empty"
-     th:if="${orders == null or orders.isEmpty()}">
+<div th:if="${orders == null or orders.isEmpty()}">
     Không có đơn hàng nào
 </div>
 
-<table th:if="${orders != null and !orders.isEmpty()}">
+<table border="1"
+       th:if="${orders != null and !orders.isEmpty()}">
+
     <thead>
     <tr>
         <th>ID</th>
@@ -53,6 +55,23 @@
         <td th:text="${order.createdDate}"></td>
     </tr>
     </tbody>
+
 </table>
+
+<div>
+    |
+    <span th:each="page : ${listPages}">
+        <a th:href="@{/orders(page=${page})}"
+           th:text="${page}">
+        </a>
+        &nbsp; | &nbsp;
+    </span>
+</div>
+
+<div>
+    Tổng số đơn:
+    <span th:text="|${totalOrders} đơn|"></span>
+</div>
+
 </body>
 </html>
